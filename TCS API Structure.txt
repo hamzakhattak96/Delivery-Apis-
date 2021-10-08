@@ -1,0 +1,48 @@
+def AsirChumiTCS(self):
+        for record in self:
+            if record.x_studio_cn_no == 0:
+                # if record.x_studio_deliverytype != "TCS":
+                url = "https://api.tcscourier.com/sandbox/v1/cod/create-order"
+
+                payload = {
+                "userName": "Testapp",
+                "password": "test123",
+                "costCenterCode": "1123",
+                "consigneeName": record.partner_id.name,
+                "consigneeAddress": "abcKarachi",
+                "consigneeMobNo": record.partner_id.phone,
+                "consigneeEmail": record.partner_id.email,
+                "originCityName": "karachi",
+                "destinationCityName": "Lahore",  
+                "weight": 1,
+                "pieces": 1,
+                "codAmount": record.amount_total,
+                "customerReferenceNo": "123",
+                "services": "O",
+                "productDetails": "string",
+                "fragile": "Yes",
+                "remarks": "string",
+                "insuranceValue": 1
+                }
+
+
+                headers = {
+                'Content-Type': 'application/json',
+                'X-IBM-Client-Id': 'd4a806ab-75f8-4afc-8b2a-21397d493888',
+                }
+
+                response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
+                Asir = str(response.text).split('Your generated CN is: ')[1]
+                Chummi = str(Asir).split('}')[0]
+                CN_No = str(Chummi).split('"')[0]
+
+                # raise UserError(str(CN_No))
+
+                
+                record.x_studio_cn_no = CN_No;
+                record.x_studio_deliverytype = "TCS"
+            else:
+                raise UserError("CN No Already posted ")    
+
+            # raise UserError(str(records.x_studio_cn_no))
+        # print(response.text)

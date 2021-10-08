@@ -1,0 +1,48 @@
+def AsirChumiMNP(self):
+
+        for record in self:
+            if record.x_studio_cn_no == 0:
+                # if record.x_studio_deliverytype != "TCS":
+                url = "http://mnpcourier.com/mycodapi/api/Booking/InsertBookingData"
+
+                payload = {
+                "username": "Test_User",
+                "password": "12345",
+                "consigneeName": "Shaheer",
+                "consigneeAddress": "Clifton Karachi, Pakistan",
+                "consigneeMobNo": "03323699569",
+                "consigneeEmail": "shaheer.sohail@mulphilog.com",
+                "destinationCityName": "Karachi",
+                "pieces": 2,
+                "weight": 5.5,
+                "codAmount": 100,
+                "custRefNo": "T-786",
+                "productDetails": "one White t shirt medium",
+                "fragile": "Yes",
+                "service": "O",
+                "remarks": "Please call before delivery",
+                "insuranceValue": "0",
+                "locationID": "04",
+                "AccountNo": "4t154"
+                }
+
+
+                headers = {
+                'Content-Type': 'application/json',
+                # 'X-IBM-Client-Id': 'd4a806ab-75f8-4afc-8b2a-21397d493888',
+                }
+
+                response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
+                Asir = str(response.text).split('"orderReferenceId":"')[1]
+                Chummi = str(Asir).split('}')[0]
+                CN_No = str(Chummi).split('"')[0]
+
+                # raise UserError(str(CN_No))
+
+                
+                record.x_studio_cn_no = CN_No;
+                record.x_studio_deliverytype = "M&P"
+            else:
+                raise UserError("CN No Already posted ")    
+
+    
